@@ -1,11 +1,13 @@
 from flask import Flask, request, jsonify
 import numpy as np
 import cv2
+import os
 from keras.models import load_model
 
 app = Flask(__name__)
 
-model = load_model("emotion_model.h5", compile=False)
+model_path = os.path.join(os.path.dirname(__file__), "emotion_model.h5")
+model = load_model(model_path, compile=False)
 
 emotion_labels = ["Angry", "Happy", "Sad"]
 
@@ -30,4 +32,4 @@ def predict():
     return jsonify({"emotion": emotion})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
